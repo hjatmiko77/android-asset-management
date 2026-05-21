@@ -104,7 +104,7 @@ class AssetModel extends Equatable {
       createdBy: json['created_by'],
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
-      isDeleted: json['is_deleted'] ?? false,
+      isDeleted: (json['is_deleted'] as int? ?? 0) == 1,
       syncStatus: json['sync_status'] ?? 'pending',
     );
   }
@@ -142,7 +142,7 @@ class AssetModel extends Equatable {
       createdBy: map['created_by'],
       createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
       updatedAt: map['updated_at'] != null ? DateTime.parse(map['updated_at']) : null,
-      isDeleted: map['is_deleted'] ?? false,
+      isDeleted: (map['is_deleted'] as int? ?? 0) == 1,
       syncStatus: map['sync_status'] ?? 'pending',
     );
   }
@@ -180,7 +180,7 @@ class AssetModel extends Equatable {
       'created_by': createdBy,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
-      'is_deleted': isDeleted,
+      'is_deleted': isDeleted ? 1 : 0,
       'sync_status': syncStatus,
     };
   }
@@ -218,7 +218,7 @@ class AssetModel extends Equatable {
       'created_by': createdBy,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
-      'is_deleted': isDeleted,
+      'is_deleted': isDeleted ? 1 : 0,
       'sync_status': syncStatus,
     };
   }
