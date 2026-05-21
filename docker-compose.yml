@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: asset_db
+    environment:
+      POSTGRES_USER: asset_user
+      POSTGRES_PASSWORD: asset_password
+      POSTGRES_DB: asset_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U asset_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - asset_network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: asset_backend
+    environment:
+      DATABASE_URL: postgresql://asset_user:asset_password@postgres:5432/asset_management
+      DEBUG: "False"
+      SECRET_KEY: your-secret-key-change-in-production
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - backend_uploads:/app/uploads
+    networks:
+      - asset_network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # NGINX Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: asset_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    networks:
+      - asset_network
+
+volumes:
+  postgres_data:
+  backend_uploads:
+
+networks:
+  asset_network:
+    driver: bridge

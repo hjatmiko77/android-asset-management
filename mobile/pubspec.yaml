@@ -1,0 +1,88 @@
+name: asset_management
+description: Android Asset Management Enterprise Application
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.4.0
+  riverpod_annotation: ^2.1.0
+
+  # HTTP Client
+  dio: ^5.3.0
+  retrofit: ^4.1.0
+
+  # Local Database
+  sqflite: ^2.3.0
+  path_provider: ^2.1.0
+
+  # Camera & Barcode
+  image_picker: ^1.0.0
+  camera: ^0.10.0
+  mobile_scanner: ^3.5.0
+
+  # GPS/Location
+  geolocator: ^10.1.0
+
+  # Excel
+  excel: ^3.0.0
+  path: ^1.8.0
+
+  # Authentication
+  flutter_secure_storage: ^9.0.0
+
+  # Date & Time
+  intl: ^0.19.0
+
+  # Utilities
+  equatable: ^2.0.0
+  get_it: ^7.6.0
+  logger: ^2.0.0
+
+  # UI
+  google_fonts: ^6.1.0
+  cached_network_image: ^3.3.0
+
+  # API Documentation
+  # openapi_generator: ^0.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^2.0.0
+
+  # Code Generation
+  build_runner: ^2.4.0
+  retrofit_generator: ^4.1.0
+  riverpod_generator: ^2.3.0
+
+  # Testing
+  mocktail: ^1.0.0
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: GoogleSans
+      fonts:
+        - asset: assets/fonts/GoogleSans-Regular.ttf
+        - asset: assets/fonts/GoogleSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/GoogleSans-Italic.ttf
+          style: italic
