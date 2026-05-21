@@ -44,9 +44,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Navigator.of(context).pushReplacementNamed('/home');
         }
       });
-      next.whenError((error, stack) {
-        setState(() => errorMessage = error.toString());
-      });
+      next.map(
+        data: (data) => null,
+        loading: (loading) => null,
+        error: (error) {
+          setState(() => errorMessage = error.error.toString());
+          return null;
+        },
+      );
     });
 
     return Scaffold(

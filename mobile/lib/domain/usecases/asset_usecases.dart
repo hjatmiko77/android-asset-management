@@ -6,8 +6,8 @@ class CreateAssetUsecase {
 
   CreateAssetUsecase(this.repository);
 
-  Future<int> call(AssetModel asset) {
-    return repository.createAsset(asset);
+  Future<int> call(AssetModel asset) async {
+    return await repository.createAsset(asset);
   }
 }
 
@@ -16,8 +16,8 @@ class GetAssetsUsecase {
 
   GetAssetsUsecase(this.repository);
 
-  Future<List<AssetModel>> call({String? search}) {
-    return repository.getAssets(search: search);
+  Future<List<AssetModel>> call({String? search}) async {
+    return await repository.getAssets(search: search);
   }
 }
 
@@ -26,8 +26,8 @@ class GetAssetByIdUsecase {
 
   GetAssetByIdUsecase(this.repository);
 
-  Future<AssetModel?> call(int id) {
-    return repository.getAssetById(id);
+  Future<AssetModel?> call(int id) async {
+    return await repository.getAssetById(id);
   }
 }
 
@@ -36,8 +36,8 @@ class GetAssetBySerialNumberUsecase {
 
   GetAssetBySerialNumberUsecase(this.repository);
 
-  Future<AssetModel?> call(String serialNumber) {
-    return repository.getAssetBySerialNumber(serialNumber);
+  Future<AssetModel?> call(String serialNumber) async {
+    return await repository.getAssetBySerialNumber(serialNumber);
   }
 }
 
@@ -46,8 +46,8 @@ class UpdateAssetUsecase {
 
   UpdateAssetUsecase(this.repository);
 
-  Future<void> call(int id, AssetModel asset) {
-    return repository.updateAsset(id, asset);
+  Future<void> call(int id, AssetModel asset) async {
+    return await repository.updateAsset(id, asset);
   }
 }
 
@@ -56,17 +56,7 @@ class DeleteAssetUsecase {
 
   DeleteAssetUsecase(this.repository);
 
-  Future<void> call(int id) {
-    return repository.deleteAsset(id);
-  }
-}
-
-class SyncPendingAssetsUsecase {
-  final AssetRepository repository;
-
-  SyncPendingAssetsUsecase(this.repository);
-
-  Future<void> call() {
-    return repository.syncPendingAssets();
+  Future<void> call(int id) async {
+    return await repository.deleteAsset(id);
   }
 }
