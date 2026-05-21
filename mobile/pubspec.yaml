@@ -29,9 +29,6 @@ dependencies:
   # GPS/Location
   geolocator: ^10.1.0
 
-  # Connectivity
-  connectivity_plus: ^5.0.0
-
   # Authentication
   flutter_secure_storage: ^9.0.0
 
