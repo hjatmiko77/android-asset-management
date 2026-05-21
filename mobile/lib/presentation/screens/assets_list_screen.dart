@@ -22,8 +22,8 @@ class _AssetsListScreenState extends ConsumerState<AssetsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final assetsProvider = searchQuery.isEmpty
-        ? ref.watch(assetsProvider as dynamic)
+    final assetsAsync = searchQuery.isEmpty
+        ? ref.watch(assetsProvider)
         : ref.watch(searchAssetsProvider(searchQuery));
 
     return Scaffold(
@@ -61,7 +61,7 @@ class _AssetsListScreenState extends ConsumerState<AssetsListScreen> {
           ),
           // Assets list
           Expanded(
-            child: assetsProvider.when(
+            child: assetsAsync.when(
               loading: () => const Center(
                 child: CircularProgressIndicator(),
               ),

@@ -1,29 +1,20 @@
-import 'dart:convert';
 import 'package:asset_management/data/datasources/local/database_helper.dart';
 import 'package:asset_management/data/datasources/remote/api_client.dart';
 import 'package:asset_management/data/models/asset_model.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AssetRepository {
   final ApiClient apiClient;
   final DatabaseHelper databaseHelper;
-  final Connectivity connectivity;
 
   AssetRepository({
     required this.apiClient,
     required this.databaseHelper,
-    required this.connectivity,
   });
-
-  Future<bool> _isOnline() async {
-    final result = await connectivity.checkConnectivity();
-    return result != ConnectivityResult.none;
-  }
 
   Future<int> createAsset(AssetModel asset) async {
     try {
-      if (await _isOnline()) {
-        // Upload to server
+      try {
+        // Try to upload to server
         final response = await apiClient.post(
           '/assets',
           data: asset.toJson(),
@@ -36,8 +27,8 @@ class AssetRepository {
             'sync_status': 'synced',
           });
         }
-      } else {
-        // Save locally for later sync
+      } catch (e) {
+        // If server error, save locally
         return await databaseHelper.insertAsset({
           ...asset.toMap(),
           'sync_status': 'pending',
@@ -82,8 +73,8 @@ class AssetRepository {
 
   Future<void> updateAsset(int id, AssetModel asset) async {
     try {
-      if (await _isOnline()) {
-        // Update on server
+      try {
+        // Try to update on server
         await apiClient.patch(
           '/assets/$id',
           data: asset.toJson(),
@@ -93,7 +84,7 @@ class AssetRepository {
           ...asset.toMap(),
           'sync_status': 'synced',
         });
-      } else {
+      } catch (e) {
         // Update locally only
         await databaseHelper.updateAsset(id, {
           ...asset.toMap(),
@@ -111,38 +102,14 @@ class AssetRepository {
 
   Future<void> deleteAsset(int id) async {
     try {
-      if (await _isOnline()) {
+      try {
         await apiClient.delete('/assets/$id');
+      } catch (e) {
+        // Continue even if server delete fails
       }
       await databaseHelper.deleteAsset(id);
     } catch (e) {
       await databaseHelper.deleteAsset(id);
-    }
-  }
-
-  Future<void> syncPendingAssets() async {
-    try {
-      if (!await _isOnline()) return;
-
-      final pendingItems = await databaseHelper.getPendingSyncItems();
-      for (final item in pendingItems) {
-        try {
-          final payload = jsonDecode(item['payload']);
-          if (item['action'] == 'CREATE') {
-            await apiClient.post('/assets', data: payload);
-          } else if (item['action'] == 'UPDATE') {
-            await apiClient.patch(
-              '/assets/${item['resource_id']}',
-              data: payload,
-            );
-          }
-          await databaseHelper.updateSyncStatus(item['id'], 'synced');
-        } catch (e) {
-          // Continue with next item
-        }
-      }
-    } catch (e) {
-      rethrow;
     }
   }
 }

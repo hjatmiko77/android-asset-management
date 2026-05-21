@@ -13,6 +13,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   bool _obscurePassword = true;
+  String? errorMessage;
 
   @override
   void dispose() {
@@ -26,9 +27,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = passwordController.text;
 
     if (username.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
-      );
+      setState(() => errorMessage = 'Please fill all fields');
       return;
     }
 
@@ -44,10 +43,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (user != null) {
           Navigator.of(context).pushReplacementNamed('/home');
         }
-      }).whenError((error, stack) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: $error')),
-        );
+      });
+      next.whenError((error, stack) {
+        setState(() => errorMessage = error.toString());
       });
     });
 
@@ -87,6 +85,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 48),
+              // Error message
+              if (errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      border: Border.all(color: Colors.red.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      errorMessage!,
+                      style: TextStyle(color: Colors.red.shade700),
+                    ),
+                  ),
+                ),
               // Username field
               TextField(
                 controller: usernameController,

@@ -1,23 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:asset_management/data/datasources/local/database_helper.dart';
+import 'package:asset_management/data/datasources/remote/api_client.dart';
 import 'package:asset_management/data/repositories/asset_repository.dart';
 import 'package:asset_management/data/models/asset_model.dart';
 import 'package:asset_management/domain/usecases/asset_usecases.dart';
 import 'package:asset_management/presentation/providers/auth_provider.dart';
+import 'package:asset_management/data/datasources/local/database_helper.dart';
 
 final databaseHelperProvider = Provider((ref) => DatabaseHelper());
-
-final connectivityProvider = Provider((ref) => Connectivity());
 
 final assetRepositoryProvider = Provider((ref) {
   final apiClient = ref.watch(apiClientProvider);
   final database = ref.watch(databaseHelperProvider);
-  final connectivity = ref.watch(connectivityProvider);
   return AssetRepository(
     apiClient: apiClient,
     databaseHelper: database,
-    connectivity: connectivity,
   );
 });
 
@@ -49,11 +45,6 @@ final updateAssetUsecaseProvider = Provider((ref) {
 final deleteAssetUsecaseProvider = Provider((ref) {
   final repository = ref.watch(assetRepositoryProvider);
   return DeleteAssetUsecase(repository);
-});
-
-final syncPendingAssetsUsecaseProvider = Provider((ref) {
-  final repository = ref.watch(assetRepositoryProvider);
-  return SyncPendingAssetsUsecase(repository);
 });
 
 final assetsProvider = FutureProvider<List<AssetModel>>((ref) async {
