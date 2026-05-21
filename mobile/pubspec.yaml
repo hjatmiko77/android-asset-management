@@ -22,9 +22,8 @@ dependencies:
   sqflite: ^2.3.0
   path_provider: ^2.1.0
 
-  # Camera & Barcode
+  # Camera & Image Picker
   image_picker: ^1.0.0
-  mobile_scanner: ^3.5.0
 
   # GPS/Location
   geolocator: ^10.1.0
