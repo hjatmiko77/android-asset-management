@@ -180,7 +180,7 @@ class AssetModel extends Equatable {
       'created_by': createdBy,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
-      'is_deleted': isDeleted ? 1 : 0,
+      'is_deleted': (isDeleted ?? false) ? 1 : 0,
       'sync_status': syncStatus,
     };
   }
@@ -218,7 +218,7 @@ class AssetModel extends Equatable {
       'created_by': createdBy,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
-      'is_deleted': isDeleted ? 1 : 0,
+      'is_deleted': (isDeleted ?? false) ? 1 : 0,
       'sync_status': syncStatus,
     };
   }
